@@ -12,7 +12,7 @@ const _hedvig = Hedvig_Letters_Serif({
 })
 
 const _stack = localFont({
-  src: "@/fonts/StackSansText/StackSansText.woff2",
+  src: "../fonts/StackSansText/StackSansText.woff2",
   variable: "--font-stack"
 })
 
