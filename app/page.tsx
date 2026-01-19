@@ -88,8 +88,8 @@ export default function HomePage() {
           highlight="Su Misura"
           subtitle="Cooperativa artigianale specializzata nella fabbricazione di scale a giorno, scale a chiocciola in legno e metallo, ringhiere e balaustre. Dal 1984, realizziamo i tuoi progetti con passione e maestria."
           image="/images/hero-scale.jpg"
-          primaryAction={{ label: "Richiedi Preventivo", href: "/contatti" }}
-          secondaryAction={{ label: "Scopri le Lavorazioni", href: "/lavorazioni" }}
+          primaryAction={{ label: "Richiedi preventivo", href: "/contatti" }}
+          secondaryAction={{ label: "Scopri le lavorazioni", href: "/galleria" }}
         />
 
         {/* About Preview Section */}
@@ -97,7 +97,7 @@ export default function HomePage() {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="order-2 lg:order-1">
               <span className="text-sm font-medium text-primary uppercase tracking-wider">
-                Chi Siamo
+                Chi siamo
               </span>
               <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-foreground md:text-4xl text-balance">
                 40 anni di esperienza nella lavorazione artigianale
@@ -115,15 +115,15 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap gap-8">
                 <div>
                   <span className="font-serif text-4xl font-bold text-primary">40+</span>
-                  <p className="text-sm text-muted-foreground">Anni di Esperienza</p>
+                  <p className="text-sm text-muted-foreground">Anni di esperienza</p>
                 </div>
                 <div>
                   <span className="font-serif text-4xl font-bold text-primary">1000+</span>
-                  <p className="text-sm text-muted-foreground">Progetti Realizzati</p>
+                  <p className="text-sm text-muted-foreground">Progetti realizzati</p>
                 </div>
                 <div>
                   <span className="font-serif text-4xl font-bold text-primary">100%</span>
-                  <p className="text-sm text-muted-foreground">Su Misura</p>
+                  <p className="text-sm text-muted-foreground">Su misura</p>
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function HomePage() {
         {/* Services Section */}
         <Section variant="muted">
           <SectionHeader
-            label="Le Nostre Lavorazioni"
+            label="Le Nostre lavorazioni"
             title="Soluzioni artigianali per ogni esigenza"
             subtitle="Dalla progettazione alla realizzazione, offriamo un servizio completo per trasformare i tuoi spazi con scale e ringhiere su misura."
           />
