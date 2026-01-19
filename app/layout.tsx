@@ -12,7 +12,7 @@ const _hedvig = Hedvig_Letters_Serif({
 })
 
 const _stack = localFont({
-  src: "../fonts/StackSansText/StackSansText.woff2",
+  src: "../styles/fonts/StackSansText/StackSansText.woff2",
   variable: "--font-stack"
 })
 
@@ -53,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" suppressHydrationWarning>
-      <body className={`font-stack antialiased`}>
+      <body className={`font-stack font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
         </ThemeProvider>

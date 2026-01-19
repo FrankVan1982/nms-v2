@@ -5,14 +5,14 @@ const navigation = {
   main: [
     { name: "Home", href: "/" },
     { name: "Chi Siamo", href: "/chi-siamo" },
-    { name: "Lavorazioni", href: "/lavorazioni" },
+    { name: "Galeria lavorazioni", href: "/galleria" },
     { name: "Contatti", href: "/contatti" },
   ],
   services: [
-    { name: "Scale a Chiocciola", href: "/lavorazioni#scale-chiocciola" },
-    { name: "Scale a Giorno", href: "/lavorazioni#scale-giorno" },
-    { name: "Ringhiere", href: "/lavorazioni#ringhiere" },
-    { name: "Rivestimenti", href: "/lavorazioni#rivestimenti" },
+    { name: "Scale a Chiocciola", href: "/galleria#scale-chiocciola" },
+    { name: "Scale a Giorno", href: "/galleria#scale-giorno" },
+    { name: "Ringhiere", href: "/galleria#ringhiere" },
+    { name: "Rivestimenti", href: "/galleria#rivestimenti" },
   ],
 }
 
@@ -86,7 +86,7 @@ export function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>SP85 per Bisceglie, Km 11.900<br />70037 Ruvo di Puglia (BA)</span>
+                <span>SP85 per Bisceglie, Km 11.900<br />70033 Corato (BA)</span>
               </li>
               <li className="flex items-center gap-2">
                 <svg className="h-5 w-5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">

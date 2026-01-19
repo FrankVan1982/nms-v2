@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --tertiary: oklch(0.95 0.01 60);
+  --tertiary-foreground: oklch(0.20 0.01 30);
+}
+
 :root {
   --background: oklch(0.98 0.002 60);
   --foreground: oklch(0.15 0.01 30);
@@ -12,6 +17,8 @@
   --popover-foreground: oklch(0.15 0.01 30);
   --primary: oklch(0.50 0.18 25);
   --primary-foreground: oklch(0.98 0 0);
+  --tertiary: oklch(0.5708 0.1273 252.42);
+  --tertiary-foreground: oklch(0.2044 0.0493 252.42);
   --secondary: oklch(0.95 0.01 60);
   --secondary-foreground: oklch(0.20 0.01 30);
   --muted: oklch(0.94 0.01 60);
@@ -75,7 +82,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Figtree', 'Figtree Fallback', system-ui, sans-serif;
+  --font-sans: 'Stack Sans Text', "Stack Sans Text Fallback", system-ui, sans-serif;
   --font-serif: 'Hedvig Letters Serif', 'Hedvig Letters Serif Fallback', Georgia, serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-background: var(--background);

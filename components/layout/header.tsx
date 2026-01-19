@@ -9,7 +9,7 @@ import { ThemeToggle } from "../themetoggle"
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Chi Siamo", href: "/chi-siamo" },
-  { name: "Lavorazioni", href: "/lavorazioni" },
+  { name: "Galleria lavorazioni", href: "/galleria" },
   { name: "Contatti", href: "/contatti" },
 ]
 
@@ -23,7 +23,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <div className="flex flex-col">
             <span className="font-serif text-lg font-bold tracking-tight text-foreground md:text-xl">
-              Nuova Misura
+              Nuova Misur<span className="font-serif text-lg font-bold tracking-tight text-foreground md:text-xl">A</span>
             </span>
             <span className="text-xs tracking-[0.2em] text-primary uppercase">
               Scale
