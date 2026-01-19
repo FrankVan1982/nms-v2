@@ -4,7 +4,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-secondary
   --tertiary: oklch(0.95 0.01 60);
   --tertiary-foreground: oklch(0.20 0.01 30);
 }

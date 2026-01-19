@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 export const metadata: Metadata = {
-  title: "Lavorazioni | Nuova Misura Scale",
+  title: "Galleria lavorazioni | Nuova Misura Scale",
   description: "Scopri le nostre lavorazioni artigianali: scale a chiocciola, scale a giorno, ringhiere, balaustre e rivestimenti in legno e metallo.",
 }
 
@@ -88,7 +88,7 @@ export default function LavorazioniPage() {
       <Header />
       <main>
         <PageHeader
-          breadcrumb="Lavorazioni"
+          breadcrumb="Galleria lavorazioni"
           title="Le nostre specializzazioni"
           subtitle="Scale a chiocciola, scale a giorno, ringhiere, balaustre e rivestimenti. Ogni lavorazione è un pezzo unico, realizzato su misura per te."
         />
