@@ -1,7 +1,7 @@
 import React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import type { Metadata, Viewport } from 'next'
-import { Hedvig_Letters_Serif } from 'next/font/google'
+import { Hedvig_Letters_Serif, Stack_Sans_Text } from 'next/font/google'
 import localFont from "next/font/local"
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
@@ -14,6 +14,12 @@ const _hedvig = Hedvig_Letters_Serif({
 const _stack = localFont({
   src: "./fonts/StackSansText/SST.woff2",
   variable: "--font-stack"
+})
+
+const _stacktext = Stack_Sans_Text({
+  subsets: ["latin"],
+  variable: "--font-stacktext",
+  display: "swap"
 })
 
 export const metadata: Metadata = {
@@ -53,7 +59,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" suppressHydrationWarning>
-      <body className={`font-stack font-sans antialiased`}>
+      <body className={`font-stacktext font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
         </ThemeProvider>
