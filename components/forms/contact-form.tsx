@@ -1,8 +1,6 @@
 "use client"
 
-import React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,16 +11,71 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState("")
+  
+  // State per i dati del form
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: ""
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setError("")
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.service || "Richiesta preventivo",
+          message: formData.message,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setIsSubmitted(true)
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: ""
+        })
+      } else {
+        setError(data.error || 'Errore durante l\'invio')
+      }
+    } catch (error) {
+      setError('Errore di connessione. Riprova più tardi.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    })
+  }
+
+  const handleServiceChange = (value: string) => {
+    setFormData({
+      ...formData,
+      service: value
+    })
   }
 
   if (isSubmitted) {
@@ -36,8 +89,15 @@ export function ContactForm() {
           </div>
           <h3 className="font-serif text-xl font-semibold text-foreground">Messaggio Inviato!</h3>
           <p className="mt-2 text-muted-foreground">
-            Ti contatteremo il prima possibile.
+            Ti contatteremo il prima possibile. Controlla la tua email per la conferma.
           </p>
+          <Button 
+            onClick={() => setIsSubmitted(false)} 
+            variant="outline" 
+            className="mt-4"
+          >
+            Invia un altro messaggio
+          </Button>
         </CardContent>
       </Card>
     )
@@ -53,34 +113,60 @@ export function ContactForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="name">Nome e Cognome *</Label>
-              <Input id="name" placeholder="Mario Rossi" required />
+              <Input 
+                id="name" 
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Mario Rossi" 
+                required 
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Telefono *</Label>
-              <Input id="phone" type="tel" placeholder="+39 333 1234567" required />
+              <Input 
+                id="phone" 
+                type="tel" 
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="+39 333 1234567" 
+                required 
+              />
             </div>
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="email">Email *</Label>
-            <Input id="email" type="email" placeholder="mario@example.com" required />
+            <Input 
+              id="email" 
+              type="email" 
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="mario@example.com" 
+              required 
+            />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="service">Tipo di Lavorazione</Label>
-            <Select>
+            <Select value={formData.service} onValueChange={handleServiceChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleziona un servizio" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="scale-chiocciola">Scale a Chiocciola</SelectItem>
-                <SelectItem value="scale-giorno">Scale a Giorno</SelectItem>
-                <SelectItem value="ringhiere">Ringhiere e Balaustre</SelectItem>
-                <SelectItem value="rivestimenti">Rivestimenti</SelectItem>
-                <SelectItem value="altro">Altro</SelectItem>
+                <SelectItem value="Scale a Chiocciola">Scale a Chiocciola</SelectItem>
+                <SelectItem value="Scale a Giorno">Scale a Giorno</SelectItem>
+                <SelectItem value="Ringhiere e Balaustre">Ringhiere e Balaustre</SelectItem>
+                <SelectItem value="Rivestimenti">Rivestimenti</SelectItem>
+                <SelectItem value="Altro">Altro</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -89,6 +175,8 @@ export function ContactForm() {
             <Label htmlFor="message">Messaggio *</Label>
             <Textarea 
               id="message" 
+              value={formData.message}
+              onChange={handleInputChange}
               placeholder="Descrivi il tuo progetto..."
               rows={4}
               required 

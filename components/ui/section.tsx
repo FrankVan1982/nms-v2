@@ -30,18 +30,19 @@ interface SectionHeaderProps {
   title: string
   subtitle?: string
   label?: string
+  labelColor?: string
   align?: "left" | "center"
   className?: string
 }
 
-export function SectionHeader({ title, subtitle, label, align = "center", className }: SectionHeaderProps) {
+export function SectionHeader({ title, subtitle, label, align = "center", className, labelColor }: SectionHeaderProps) {
   return (
     <div className={cn(
       "max-w-3xl mb-12 md:mb-16",
       align === "center" && "mx-auto text-center",
       className
     )}>
-      {label && (
+      {label && labelColor && (
         <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
           {label}
         </span>

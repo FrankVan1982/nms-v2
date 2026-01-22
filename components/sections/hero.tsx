@@ -54,7 +54,7 @@ export function Hero({ title, highlight, subtitle, image, primaryAction, seconda
               </Button>
             )}
             {secondaryAction && (
-              <Button size="lg" variant="outline" asChild className="text-base border-white/30 text-white hover:bg-white/10 hover:text-white bg-transparent">
+              <Button size="lg" variant="tertiary" asChild className="text-base">
                 <Link href={secondaryAction.href}>{secondaryAction.label}</Link>
               </Button>
             )}

@@ -90,7 +90,8 @@ export default function HomePage() {
           image="/images/hero-scale.jpg"
           primaryAction={{ label: "Richiedi preventivo", href: "/contatti" }}
           secondaryAction={{ label: "Scopri le lavorazioni", href: "/galleria" }}
-        />
+        >
+        </Hero>
 
         {/* About Preview Section */}
         <Section>
@@ -142,6 +143,7 @@ export default function HomePage() {
         <Section variant="muted">
           <SectionHeader
             label="Le Nostre lavorazioni"
+            labelColor="text-tertiary-500"
             title="Soluzioni artigianali per ogni esigenza"
             subtitle="Dalla progettazione alla realizzazione, offriamo un servizio completo per trasformare i tuoi spazi con scale e ringhiere su misura."
           />
