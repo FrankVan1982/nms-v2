@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -69,24 +70,38 @@ export function ClientForm({
     },
   })
 
+  // Reset form when client changes (edit mode) or becomes null (create mode)
+  useEffect(() => {
+    if (client) {
+      form.reset({
+        company_name: client.company_name,
+        contact_name: client.contact_name,
+        email: client.email,
+        phone: client.phone || "",
+        address: client.address || "",
+        city: client.city || "",
+        country: client.country || "",
+        vat_number: client.vat_number || "",
+        notes: client.notes || "",
+      })
+    } else {
+      form.reset({
+        company_name: "",
+        contact_name: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        country: "",
+        vat_number: "",
+        notes: "",
+      })
+    }
+  }, [client, form])
+
   const handleSubmit = async (data: ClientFormData) => {
     await onSubmit(data)
     form.reset()
-  }
-
-  // Reset form when client changes
-  if (client && form.getValues("company_name") !== client.company_name) {
-    form.reset({
-      company_name: client.company_name,
-      contact_name: client.contact_name,
-      email: client.email,
-      phone: client.phone || "",
-      address: client.address || "",
-      city: client.city || "",
-      country: client.country || "",
-      vat_number: client.vat_number || "",
-      notes: client.notes || "",
-    })
   }
 
   return (
