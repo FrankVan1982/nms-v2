@@ -16,10 +16,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
@@ -148,32 +146,28 @@ export function ClientsTable({
                           Modifica
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuSub>
-                          <DropdownMenuSubTrigger className="cursor-pointer">
-                            <FileDown className="mr-2 h-4 w-4" />
-                            Esporta .docx
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent className="bg-card border-border">
-                            <DropdownMenuItem
-                              onClick={() => onExport(client.id, "scheda")}
-                              className="cursor-pointer"
-                            >
-                              Scheda Cliente
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => onExport(client.id, "ddt")}
-                              className="cursor-pointer"
-                            >
-                              DDT (Documento di Trasporto)
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => onExport(client.id, "fattura")}
-                              className="cursor-pointer"
-                            >
-                              Fattura
-                            </DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
+                        <DropdownMenuLabel className="text-xs text-muted-foreground font-normal flex items-center gap-2">
+                          <FileDown className="h-3 w-3" />
+                          Esporta .docx
+                        </DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={() => onExport(client.id, "scheda")}
+                          className="cursor-pointer pl-7"
+                        >
+                          Scheda Cliente
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => onExport(client.id, "ddt")}
+                          className="cursor-pointer pl-7"
+                        >
+                          DDT
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => onExport(client.id, "fattura")}
+                          className="cursor-pointer pl-7"
+                        >
+                          Fattura
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => handleDeleteClick(client)}
