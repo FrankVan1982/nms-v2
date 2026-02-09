@@ -1,10 +1,11 @@
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
+import { ThemeToggle } from "../themetoggle"
 
 const navigation = {
   main: [
     { name: "Home", href: "/" },
-    { name: "Chi Siamo", href: "/chi-siamo" },
+    { name: "Chi siamo", href: "/chi-siamo" },
     { name: "Galeria lavorazioni", href: "/galleria" },
     { name: "Contatti", href: "/contatti" },
   ],
@@ -107,9 +108,12 @@ export function Footer() {
         <Separator className="my-8" />
 
         <div className="flex flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
+          
           <p className="text-sm text-muted-foreground">
+            
             &copy; {new Date().getFullYear()} Nuova Misura Scale. Tutti i diritti riservati.
           </p>
+          <ThemeToggle />
           <p className="text-xs text-muted-foreground">
             P.IVA: 00000000000 | Dal 1984
           </p>

@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button"
 
 interface HeroProps {
   title: string
-  highlight?: string
+  highlight1?: string
+  highlight2?: string
   subtitle: string
   image: string
   primaryAction?: {
@@ -17,7 +18,7 @@ interface HeroProps {
   }
 }
 
-export function Hero({ title, highlight, subtitle, image, primaryAction, secondaryAction }: HeroProps) {
+export function Hero({ title, highlight1, highlight2, subtitle, image, primaryAction, secondaryAction }: HeroProps) {
   return (
     <section className="relative min-h-[90vh] flex items-center">
       {/* Background Image */}
@@ -37,10 +38,15 @@ export function Hero({ title, highlight, subtitle, image, primaryAction, seconda
         <div className="max-w-3xl">
           <h1 className="font-serif text-4xl font-bold tracking-tight text-white dark:text-black md:text-5xl lg:text-6xl xl:text-7xl text-balance">
             {title}
-            {highlight && (
+            {highlight1 && (
               <>
                 <br />
-                <span className="text-primary-foreground/90">{highlight}</span>
+                <span className="text-primary/90">{highlight1}&nbsp;</span>
+              </>
+            )}
+            {highlight2 && (
+              <>
+               <span className="text-tertiary-500/90">{highlight2}</span>
               </>
             )}
           </h1>
@@ -65,7 +71,7 @@ export function Hero({ title, highlight, subtitle, image, primaryAction, seconda
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce">
         <svg
-          className="h-6 w-6 text-white/60"
+          className="h-6 w-6 text-white/60 dark:text-black/60"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

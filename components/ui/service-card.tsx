@@ -6,12 +6,13 @@ import { cn } from "@/lib/utils"
 interface ServiceCardProps {
   title: string
   description: string
+  textColor: string
   image: string
   href: string
   className?: string
 }
 
-export function ServiceCard({ title, description, image, href, className }: ServiceCardProps) {
+export function ServiceCard({ title, description, textColor, image, href, className }: ServiceCardProps) {
   return (
     <Link href={href} className={cn("group block", className)}>
       <Card className="overflow-hidden border-0 shadow-none bg-transparent">
@@ -31,7 +32,8 @@ export function ServiceCard({ title, description, image, href, className }: Serv
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
             {description}
           </p>
-          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
+          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium">
+          <span className={textColor}>
             Scopri di più
             <svg 
               className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" 
@@ -41,6 +43,7 @@ export function ServiceCard({ title, description, image, href, className }: Serv
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
+          </span>
           </span>
         </CardContent>
       </Card>

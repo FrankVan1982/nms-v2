@@ -12,25 +12,25 @@ const services = [
     title: "Scale a Chiocciola",
     description: "Eleganti scale elicoidali in legno e metallo, progettate per ottimizzare lo spazio senza rinunciare al design.",
     image: "/images/scale-chiocciola.jpg",
-    href: "/lavorazioni#scale-chiocciola",
+    href: "/galleria#scale-chiocciola",
   },
   {
     title: "Scale a Giorno",
     description: "Scale moderne con gradini a sbalzo, perfette per ambienti contemporanei che richiedono luminosità.",
     image: "/images/scale-giorno.jpg",
-    href: "/lavorazioni#scale-giorno",
+    href: "/galleria#scale-giorno",
   },
   {
     title: "Ringhiere e Balaustre",
     description: "Creazioni artigianali in ferro battuto e legno, dalla tradizione classica al design moderno.",
     image: "/images/ringhiere.jpg",
-    href: "/lavorazioni#ringhiere",
+    href: "/galleria#ringhiere",
   },
   {
     title: "Rivestimenti",
     description: "Rivestimenti in legno pregiato per scale esistenti, per rinnovare e valorizzare i tuoi spazi.",
     image: "/images/rivestimenti.jpg",
-    href: "/lavorazioni#rivestimenti",
+    href: "/galleria#rivestimenti",
   },
 ]
 
@@ -85,7 +85,8 @@ export default function HomePage() {
         {/* Hero Section */}
         <Hero
           title="Scale Artigianali"
-          highlight="Su Misura"
+          highlight1="Su"
+          highlight2="Misura"
           subtitle="Cooperativa artigianale specializzata nella fabbricazione di scale a giorno, scale a chiocciola in legno e metallo, ringhiere e balaustre. Dal 1984, realizziamo i tuoi progetti con passione e maestria."
           image="/images/hero-scale.jpg"
           primaryAction={{ label: "Richiedi preventivo", href: "/contatti" }}
@@ -119,7 +120,7 @@ export default function HomePage() {
                   <p className="text-sm text-muted-foreground">Anni di esperienza</p>
                 </div>
                 <div>
-                  <span className="font-serif text-4xl font-bold text-primary">1000+</span>
+                  <span className="font-serif text-4xl font-bold text-tertiary-500">1000+</span>
                   <p className="text-sm text-muted-foreground">Progetti realizzati</p>
                 </div>
                 <div>
@@ -149,7 +150,7 @@ export default function HomePage() {
           />
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service) => (
-              <ServiceCard key={service.title} {...service} />
+              <ServiceCard textColor="text-tertiary-500" key={service.title} {...service} />
             ))}
           </div>
         </Section>

@@ -8,7 +8,7 @@ import { ThemeToggle } from "../themetoggle"
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "Chi Siamo", href: "/chi-siamo" },
+  { name: "Chi siamo", href: "/chi-siamo" },
   { name: "Galleria lavorazioni", href: "/galleria" },
   { name: "Contatti", href: "/contatti" },
 ]
@@ -44,11 +44,11 @@ export function Header() {
             </Link>
           ))}
         </div>
-
+        
         {/* Desktop CTA */}
         <div className="hidden md:flex">
           <Button asChild>
-            <Link href="/contatti">Richiedi Preventivo</Link>
+            <Link href="/contatti">Richiedi preventivo</Link>
           </Button>
         </div>
 
@@ -86,7 +86,7 @@ export function Header() {
               ))}
               <Button asChild className="m-4">
                 <Link href="/contatti" onClick={() => setIsOpen(false)}>
-                  Richiedi Preventivo
+                  Richiedi preventivo
                 </Link>
               </Button>
               <ThemeToggle />

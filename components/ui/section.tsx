@@ -42,10 +42,12 @@ export function SectionHeader({ title, subtitle, label, align = "center", classN
       align === "center" && "mx-auto text-center",
       className
     )}>
-      {label && labelColor && (
-        <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
+      {label && (
+        <p className="text-sm font-medium uppercase tracking-wider mb-3 block">
+        <span className={labelColor}>
           {label}
         </span>
+        </p>
       )}
       <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl text-balance">
         {title}
