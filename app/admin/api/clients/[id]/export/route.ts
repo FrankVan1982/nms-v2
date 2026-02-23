@@ -70,15 +70,15 @@ export async function GET(
     switch (docType) {
       case "ddt":
         doc = createDDTDocument(client)
-        filename = `DDT_${client.company_name.replace(/[^a-zA-Z0-9]/g, "_")}.docx`
+        filename = `DDT_${client.ragione_sociale.replace(/[^a-zA-Z0-9]/g, "_")}.docx`
         break
       case "fattura":
         doc = createFatturaDocument(client)
-        filename = `Fattura_${client.company_name.replace(/[^a-zA-Z0-9]/g, "_")}.docx`
+        filename = `Fattura_${client.ragione_sociale.replace(/[^a-zA-Z0-9]/g, "_")}.docx`
         break
       default:
         doc = createSchedaDocument(client)
-        filename = `Scheda_${client.company_name.replace(/[^a-zA-Z0-9]/g, "_")}.docx`
+        filename = `Scheda_${client.ragione_sociale.replace(/[^a-zA-Z0-9]/g, "_")}.docx`
     }
 
     const buffer = await Packer.toBuffer(doc)
@@ -226,10 +226,10 @@ function createHeaderTable(): Table {
 
 // Client address box (right-aligned with border)
 function createClientBox(client: Client): Table {
-  const clientName = `${client.contact_name || client.company_name}`
-  const address = client.address || "Via/V.le/Piazza/C.da/Str."
-  const cityLine = client.city
-    ? `${client.city}${client.country ? ` (${client.country})` : ""}`
+  const clientName = client.ragione_sociale
+  const address = client.indirizzo || "Via/V.le/Piazza/C.da/Str."
+  const cityLine = client.citta
+    ? `${client.cap ? client.cap + " - " : ""}${client.citta}${client.provincia ? ` (${client.provincia})` : ""}`
     : "CAP - CITTA' ()"
 
   return new Table({
@@ -396,7 +396,7 @@ function createFatturaInfoRow2(client: Client): Table {
           createStyledCell("", WHITE, false, 20, AlignmentType.CENTER),
           createStyledCell("", WHITE, false, 15, AlignmentType.CENTER),
           createStyledCell("", WHITE, false, 35, AlignmentType.CENTER),
-          createStyledCell(client.vat_number || "", WHITE, false, 30, AlignmentType.CENTER),
+          createStyledCell(client.partita_iva || "", WHITE, false, 30, AlignmentType.CENTER),
         ],
       }),
     ],
@@ -603,7 +603,7 @@ function createDDTInfoRow1(
           createStyledCell(ddtNumber, WHITE, false, 15, AlignmentType.CENTER),
           createStyledCell(today.toLocaleDateString("it-IT"), WHITE, false, 20, AlignmentType.CENTER),
           createStyledCell("", WHITE, false, 20, AlignmentType.CENTER),
-          createStyledCell(client.vat_number || "", WHITE, false, 20, AlignmentType.CENTER),
+          createStyledCell(client.partita_iva || "", WHITE, false, 20, AlignmentType.CENTER),
         ],
       }),
     ],
@@ -623,7 +623,7 @@ function createDDTInfoRow2(client: Client): Table {
       new TableRow({
         children: [
           createStyledCell("", WHITE, false, 50, AlignmentType.CENTER),
-          createStyledCell(client.vat_number || "", WHITE, false, 50, AlignmentType.CENTER),
+          createStyledCell(client.partita_iva || "", WHITE, false, 50, AlignmentType.CENTER),
         ],
       }),
     ],
@@ -871,7 +871,7 @@ function createSchedaDocument(client: Client): Document {
           new Paragraph({
             children: [
               new TextRun({
-                text: client.company_name,
+                text: client.ragione_sociale,
                 bold: true,
                 size: 32,
                 font: "Arial",
@@ -882,15 +882,17 @@ function createSchedaDocument(client: Client): Document {
           }),
 
           createInfoTable([
-            ["Ragione Sociale", client.company_name],
-            ["Contatto", client.contact_name],
-            ["Email", client.email],
-            ["Telefono", client.phone || "-"],
-            ["Indirizzo", client.address || "-"],
-            ["Citta", client.city || "-"],
-            ["Paese", client.country || "-"],
-            ["Partita IVA", client.vat_number || "-"],
-            ["Note", client.notes || "-"],
+            ["Ragione Sociale", client.ragione_sociale],
+            ["Codice Fiscale", client.codice_fiscale || "-"],
+            ["Partita IVA", client.partita_iva || "-"],
+            ["Codice Univoco", client.codice_univoco || "-"],
+            ["Email", client.email || "-"],
+            ["PEC", client.pec || "-"],
+            ["Telefono", client.telefono || "-"],
+            ["Indirizzo", client.indirizzo || "-"],
+            ["Citta", client.citta || "-"],
+            ["Provincia", client.provincia || "-"],
+            ["CAP", client.cap || "-"],
           ]),
 
           new Paragraph({ text: "", spacing: { after: 200 } }),

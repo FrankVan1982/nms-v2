@@ -23,19 +23,20 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Loader2 } from "lucide-react"
 
 const clientSchema = z.object({
-  company_name: z.string().min(1, "La ragione sociale e obbligatoria"),
-  contact_name: z.string().min(1, "Il nome del contatto e obbligatorio"),
-  email: z.string().email("Email non valida"),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  country: z.string().optional(),
-  vat_number: z.string().optional(),
-  notes: z.string().optional(),
+  ragione_sociale: z.string().min(1, "La ragione sociale e obbligatoria"),
+  codice_fiscale: z.string().optional(),
+  partita_iva: z.string().optional(),
+  codice_univoco: z.string().optional(),
+  email: z.string().optional(),
+  pec: z.string().optional(),
+  telefono: z.string().optional(),
+  indirizzo: z.string().optional(),
+  citta: z.string().optional(),
+  provincia: z.string().optional(),
+  cap: z.string().optional(),
 })
 
 type ClientFormData = z.infer<typeof clientSchema>
@@ -58,15 +59,17 @@ export function ClientForm({
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      company_name: client?.company_name || "",
-      contact_name: client?.contact_name || "",
+      ragione_sociale: client?.ragione_sociale || "",
+      codice_fiscale: client?.codice_fiscale || "",
+      partita_iva: client?.partita_iva || "",
+      codice_univoco: client?.codice_univoco || "",
       email: client?.email || "",
-      phone: client?.phone || "",
-      address: client?.address || "",
-      city: client?.city || "",
-      country: client?.country || "",
-      vat_number: client?.vat_number || "",
-      notes: client?.notes || "",
+      pec: client?.pec || "",
+      telefono: client?.telefono || "",
+      indirizzo: client?.indirizzo || "",
+      citta: client?.citta || "",
+      provincia: client?.provincia || "",
+      cap: client?.cap || "",
     },
   })
 
@@ -74,27 +77,31 @@ export function ClientForm({
   useEffect(() => {
     if (client) {
       form.reset({
-        company_name: client.company_name,
-        contact_name: client.contact_name,
-        email: client.email,
-        phone: client.phone || "",
-        address: client.address || "",
-        city: client.city || "",
-        country: client.country || "",
-        vat_number: client.vat_number || "",
-        notes: client.notes || "",
+        ragione_sociale: client.ragione_sociale,
+        codice_fiscale: client.codice_fiscale || "",
+        partita_iva: client.partita_iva || "",
+        codice_univoco: client.codice_univoco || "",
+        email: client.email || "",
+        pec: client.pec || "",
+        telefono: client.telefono || "",
+        indirizzo: client.indirizzo || "",
+        citta: client.citta || "",
+        provincia: client.provincia || "",
+        cap: client.cap || "",
       })
     } else {
       form.reset({
-        company_name: "",
-        contact_name: "",
+        ragione_sociale: "",
+        codice_fiscale: "",
+        partita_iva: "",
+        codice_univoco: "",
         email: "",
-        phone: "",
-        address: "",
-        city: "",
-        country: "",
-        vat_number: "",
-        notes: "",
+        pec: "",
+        telefono: "",
+        indirizzo: "",
+        citta: "",
+        provincia: "",
+        cap: "",
       })
     }
   }, [client, form])
@@ -123,7 +130,7 @@ export function ClientForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="company_name"
+                name="ragione_sociale"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
                     <FormLabel>Ragione Sociale *</FormLabel>
@@ -141,14 +148,50 @@ export function ClientForm({
 
               <FormField
                 control={form.control}
-                name="contact_name"
+                name="codice_fiscale"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome Contatto *</FormLabel>
+                    <FormLabel>Codice Fiscale</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Mario Rossi"
+                        placeholder="RSSMRA80A01H501Z"
+                        className="bg-secondary/50 border-border"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="partita_iva"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Partita IVA</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="01234567890"
+                        className="bg-secondary/50 border-border"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="codice_univoco"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Codice Univoco (SDI)</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="ABCDEFG"
                         className="bg-secondary/50 border-border"
                       />
                     </FormControl>
@@ -162,7 +205,7 @@ export function ClientForm({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email *</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -178,7 +221,26 @@ export function ClientForm({
 
               <FormField
                 control={form.control}
-                name="phone"
+                name="pec"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>PEC</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="azienda@pec.it"
+                        className="bg-secondary/50 border-border"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="telefono"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Telefono</FormLabel>
@@ -196,25 +258,7 @@ export function ClientForm({
 
               <FormField
                 control={form.control}
-                name="vat_number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Partita IVA</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="IT01234567890"
-                        className="bg-secondary/50 border-border"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address"
+                name="indirizzo"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
                     <FormLabel>Indirizzo</FormLabel>
@@ -232,7 +276,7 @@ export function ClientForm({
 
               <FormField
                 control={form.control}
-                name="city"
+                name="citta"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Citta</FormLabel>
@@ -250,14 +294,14 @@ export function ClientForm({
 
               <FormField
                 control={form.control}
-                name="country"
+                name="provincia"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Paese</FormLabel>
+                    <FormLabel>Provincia</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Italia"
+                        placeholder="MI"
                         className="bg-secondary/50 border-border"
                       />
                     </FormControl>
@@ -268,16 +312,15 @@ export function ClientForm({
 
               <FormField
                 control={form.control}
-                name="notes"
+                name="cap"
                 render={({ field }) => (
-                  <FormItem className="md:col-span-2">
-                    <FormLabel>Note</FormLabel>
+                  <FormItem>
+                    <FormLabel>CAP</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <Input
                         {...field}
-                        placeholder="Note aggiuntive sul cliente..."
-                        rows={3}
-                        className="bg-secondary/50 border-border resize-none"
+                        placeholder="20100"
+                        className="bg-secondary/50 border-border"
                       />
                     </FormControl>
                     <FormMessage />

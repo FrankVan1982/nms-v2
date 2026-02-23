@@ -10,8 +10,8 @@ interface StatsCardsProps {
 
 export function StatsCards({ clients }: StatsCardsProps) {
   const totalClients = clients.length
-  const uniqueCountries = new Set(clients.map((c) => c.country).filter(Boolean)).size
-  const clientsWithNotes = clients.filter((c) => c.notes).length
+  const uniqueProvinces = new Set(clients.map((c) => c.provincia).filter(Boolean)).size
+  const clientsWithPiva = clients.filter((c) => c.partita_iva).length
   const recentClients = clients.filter((c) => {
     const createdAt = new Date(c.created_at)
     const thirtyDaysAgo = new Date()
@@ -33,16 +33,16 @@ export function StatsCards({ clients }: StatsCardsProps) {
       description: "Aggiunti di recente",
     },
     {
-      title: "Paesi",
-      value: uniqueCountries,
+      title: "Province",
+      value: uniqueProvinces,
       icon: Globe,
       description: "Copertura geografica",
     },
     {
-      title: "Con Note",
-      value: clientsWithNotes,
+      title: "Con P.IVA",
+      value: clientsWithPiva,
       icon: FileText,
-      description: "Info dettagliate",
+      description: "Partita IVA presente",
     },
   ]
 

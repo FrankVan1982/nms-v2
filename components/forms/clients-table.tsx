@@ -60,9 +60,10 @@ export function ClientsTable({
 
   const filteredClients = clients.filter(
     (client) =>
-      client.company_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.contact_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.email.toLowerCase().includes(searchQuery.toLowerCase())
+      client.ragione_sociale.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (client.partita_iva || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (client.email || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (client.citta || "").toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const handleDeleteClick = (client: Client) => {
@@ -94,8 +95,8 @@ export function ClientsTable({
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-secondary/30">
-              <TableHead className="text-muted-foreground">Azienda</TableHead>
-              <TableHead className="text-muted-foreground">Contatto</TableHead>
+              <TableHead className="text-muted-foreground">Ragione Sociale</TableHead>
+              <TableHead className="text-muted-foreground">P.IVA</TableHead>
               <TableHead className="text-muted-foreground hidden md:table-cell">Email</TableHead>
               <TableHead className="text-muted-foreground hidden lg:table-cell">Telefono</TableHead>
               <TableHead className="text-muted-foreground hidden lg:table-cell">Citta</TableHead>
@@ -118,16 +119,16 @@ export function ClientsTable({
                   key={client.id}
                   className="border-border hover:bg-secondary/30 transition-colors"
                 >
-                  <TableCell className="font-medium">{client.company_name}</TableCell>
-                  <TableCell>{client.contact_name}</TableCell>
+                  <TableCell className="font-medium">{client.ragione_sociale}</TableCell>
+                  <TableCell>{client.partita_iva || "-"}</TableCell>
                   <TableCell className="hidden md:table-cell text-muted-foreground">
-                    {client.email}
+                    {client.email || "-"}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell text-muted-foreground">
-                    {client.phone || "-"}
+                    {client.telefono || "-"}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell text-muted-foreground">
-                    {client.city || "-"}
+                    {client.citta || "-"}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -191,7 +192,7 @@ export function ClientsTable({
           <AlertDialogHeader>
             <AlertDialogTitle>Conferma eliminazione</AlertDialogTitle>
             <AlertDialogDescription>
-              Sei sicuro di voler eliminare {clientToDelete?.company_name}? Questa azione non puo essere annullata.
+              Sei sicuro di voler eliminare {clientToDelete?.ragione_sociale}? Questa azione non puo essere annullata.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
