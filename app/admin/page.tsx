@@ -10,7 +10,15 @@ import { Button } from "@/components/ui/button"
 import { Toaster, toast } from "sonner"
 import { Plus, Database, RefreshCw } from "lucide-react"
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) {
+    throw new Error("Failed to fetch clients")
+  }
+  const data = await res.json()
+  // Ensure we always return an array
+  return Array.isArray(data) ? data : []
+}
 
 export default function ClientsPage() {
   const { data: clients, error, isLoading, mutate } = useSWR<Client[]>(
