@@ -2,7 +2,7 @@
 
 import type { Client } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Building2, Users, Globe, FileText } from "lucide-react"
+import { Building2, Users, MapPin, FileText } from "lucide-react"
 
 interface StatsCardsProps {
   clients: Client[]
@@ -10,8 +10,8 @@ interface StatsCardsProps {
 
 export function StatsCards({ clients }: StatsCardsProps) {
   const totalClients = clients.length
-  const uniqueCountries = new Set(clients.map((c) => c.country).filter(Boolean)).size
-  const clientsWithNotes = clients.filter((c) => c.notes).length
+  const uniqueProvince = new Set(clients.map((c) => c.provincia).filter(Boolean)).size
+  const clientsWithPIva = clients.filter((c) => c.partita_iva).length
   const recentClients = clients.filter((c) => {
     const createdAt = new Date(c.created_at)
     const thirtyDaysAgo = new Date()
@@ -33,16 +33,16 @@ export function StatsCards({ clients }: StatsCardsProps) {
       description: "Aggiunti di recente",
     },
     {
-      title: "Paesi",
-      value: uniqueCountries,
-      icon: Globe,
+      title: "Province",
+      value: uniqueProvince,
+      icon: MapPin,
       description: "Copertura geografica",
     },
     {
-      title: "Con Note",
-      value: clientsWithNotes,
+      title: "Con P.IVA",
+      value: clientsWithPIva,
       icon: FileText,
-      description: "Info dettagliate",
+      description: "Clienti con partita IVA",
     },
   ]
 
