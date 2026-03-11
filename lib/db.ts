@@ -245,11 +245,17 @@ export async function getRigheFattura(fatturaId: number): Promise<RigaFattura[]>
 }
 
 export async function addRigaFattura(data: RigaFatturaInput): Promise<RigaFattura> {
+  // Calculate the computed fields
+  const importo_netto = data.quantita * data.prezzo_unitario
+  const importo_iva = importo_netto * (data.percentuale_iva / 100)
+  const importo_totale = importo_netto + importo_iva
+
   const result = await sql`
     INSERT INTO righe_fattura (fattura_id, posizione, descrizione, quantita, prezzo_unitario, 
-      aliquota_iva_id, percentuale_iva)
+      aliquota_iva_id, percentuale_iva, importo_netto, importo_iva, importo_totale)
     VALUES (${data.fattura_id}, ${data.posizione}, ${data.descrizione}, ${data.quantita}, 
-      ${data.prezzo_unitario}, ${data.aliquota_iva_id}, ${data.percentuale_iva})
+      ${data.prezzo_unitario}, ${data.aliquota_iva_id}, ${data.percentuale_iva},
+      ${importo_netto}, ${importo_iva}, ${importo_totale})
     RETURNING *
   `
   return result[0] as RigaFattura

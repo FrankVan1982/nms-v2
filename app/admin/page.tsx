@@ -252,7 +252,9 @@ export default function AdminPage() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to save fattura")
+        const errorData = await response.json().catch(() => null)
+        const errorMessage = errorData?.error || "Errore durante il salvataggio"
+        throw new Error(errorMessage)
       }
 
       toast.success(
@@ -266,8 +268,9 @@ export default function AdminPage() {
       mutateFatture()
       mutateScadenze()
       mutateStats()
-    } catch {
-      toast.error("Errore durante il salvataggio della fattura")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Errore durante il salvataggio della fattura"
+      toast.error(message)
     } finally {
       setIsFatturaSubmitting(false)
     }

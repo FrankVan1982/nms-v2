@@ -68,8 +68,16 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(fattura, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating fattura:", error)
+    
+    // Check for duplicate key error
+    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+      return NextResponse.json({ 
+        error: "Numero fattura gia esistente. Utilizzare un numero diverso." 
+      }, { status: 409 })
+    }
+    
     return NextResponse.json({ error: "Failed to create fattura" }, { status: 500 })
   }
 }
