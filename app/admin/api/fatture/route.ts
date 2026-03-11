@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getFatture, createFattura, type FatturaInput } from "@/lib/db"
+import { getFatture, createFattura, addRigaFattura, type FatturaInput, type RigaFatturaInput } from "@/lib/db"
 
 export async function GET() {
   try {
@@ -11,9 +11,22 @@ export async function GET() {
   }
 }
 
+interface RigaInput {
+  posizione: number
+  descrizione: string
+  quantita: number
+  prezzo_unitario: number
+  aliquota_iva_id: number | null
+  percentuale_iva: number
+}
+
+interface FatturaWithRighe extends FatturaInput {
+  righe?: RigaInput[]
+}
+
 export async function POST(request: Request) {
   try {
-    const body: FatturaInput = await request.json()
+    const body: FatturaWithRighe = await request.json()
 
     if (!body.numero_fattura || !body.data_documento || !body.cliente_id) {
       return NextResponse.json(
@@ -22,6 +35,7 @@ export async function POST(request: Request) {
       )
     }
 
+    // Create the fattura first
     const fattura = await createFattura({
       numero_fattura: body.numero_fattura,
       data_documento: body.data_documento,
@@ -37,6 +51,21 @@ export async function POST(request: Request) {
       stato: body.stato || "bozza",
       note: body.note || null,
     })
+
+    // Add righe if provided
+    if (body.righe && body.righe.length > 0) {
+      for (const riga of body.righe) {
+        await addRigaFattura({
+          fattura_id: fattura.id,
+          posizione: riga.posizione,
+          descrizione: riga.descrizione,
+          quantita: riga.quantita,
+          prezzo_unitario: riga.prezzo_unitario,
+          aliquota_iva_id: riga.aliquota_iva_id,
+          percentuale_iva: riga.percentuale_iva,
+        })
+      }
+    }
 
     return NextResponse.json(fattura, { status: 201 })
   } catch (error) {

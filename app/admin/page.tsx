@@ -2,10 +2,11 @@
 
 import { useState, useCallback } from "react"
 import useSWR from "swr"
-import type { Client, ClientInput, FatturaCompleta, ScadenzaPendente } from "@/lib/db"
+import type { Client, ClientInput, FatturaCompleta, ScadenzaPendente, Fattura, RigaFattura } from "@/lib/db"
 import { ClientsTable, type ExportType } from "@/components/forms/clients-table"
 import { ClientForm } from "@/components/forms/client-form"
 import { FattureTable } from "@/components/forms/fatture-table"
+import { FatturaForm } from "@/components/forms/fattura-form"
 import { ScadenzeTable } from "@/components/forms/scadenze-table"
 import { DashboardStats } from "@/components/forms/dashboard-stats"
 import { StatsCards } from "@/components/forms/stats-cards"
@@ -55,6 +56,12 @@ export default function AdminPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Fattura form state
+  const [fatturaFormOpen, setFatturaFormOpen] = useState(false)
+  const [selectedFattura, setSelectedFattura] = useState<Fattura | null>(null)
+  const [selectedFatturaRighe, setSelectedFatturaRighe] = useState<RigaFattura[]>([])
+  const [isFatturaSubmitting, setIsFatturaSubmitting] = useState(false)
 
   const handleRefreshAll = () => {
     mutateClients()
@@ -159,12 +166,29 @@ export default function AdminPage() {
   }
 
   // Fattura handlers
-  const handleViewFattura = (fattura: FatturaCompleta) => {
-    toast.info(`Visualizzazione fattura ${fattura.numero_fattura} - Coming soon`)
+  const handleCreateFattura = () => {
+    setSelectedFattura(null)
+    setSelectedFatturaRighe([])
+    setFatturaFormOpen(true)
   }
 
-  const handleEditFattura = (fattura: FatturaCompleta) => {
-    toast.info(`Modifica fattura ${fattura.numero_fattura} - Coming soon`)
+  const handleViewFattura = async (fattura: FatturaCompleta) => {
+    // Load full fattura data for viewing/editing
+    try {
+      const response = await fetch(`/admin/api/fatture/${fattura.id}`)
+      if (!response.ok) throw new Error("Failed to fetch fattura")
+      const data = await response.json()
+      setSelectedFattura(data.fattura)
+      setSelectedFatturaRighe(data.righe || [])
+      setFatturaFormOpen(true)
+    } catch {
+      toast.error("Errore nel caricamento della fattura")
+    }
+  }
+
+  const handleEditFattura = async (fattura: FatturaCompleta) => {
+    // Same as view - opens the form for editing
+    await handleViewFattura(fattura)
   }
 
   const handleDeleteFattura = async (id: number) => {
@@ -183,6 +207,69 @@ export default function AdminPage() {
       mutateStats()
     } catch {
       toast.error("Errore durante l'eliminazione della fattura")
+    }
+  }
+
+  const handleSubmitFattura = async (
+    data: {
+      numero_fattura: string
+      data_documento: string
+      cliente_id: number | null
+      rif_bolla_numero: string
+      rif_bolla_data: string
+      modalita_pagamento_id: number | null
+      descrizione_pagamento: string
+      iban: string
+      sconto_percentuale: number
+      spese_incasso: number
+      acconto: number
+      stato: string
+      note: string
+    },
+    righe: {
+      id?: number
+      posizione: number
+      descrizione: string
+      quantita: number
+      prezzo_unitario: number
+      aliquota_iva_id: number | null
+      percentuale_iva: number
+    }[]
+  ) => {
+    setIsFatturaSubmitting(true)
+    try {
+      const url = selectedFattura
+        ? `/admin/api/fatture/${selectedFattura.id}`
+        : "/admin/api/fatture"
+      const method = selectedFattura ? "PUT" : "POST"
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data, righe }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to save fattura")
+      }
+
+      toast.success(
+        selectedFattura
+          ? "Fattura aggiornata con successo"
+          : "Fattura creata con successo"
+      )
+      setFatturaFormOpen(false)
+      setSelectedFattura(null)
+      setSelectedFatturaRighe([])
+      mutateFatture()
+      mutateScadenze()
+      mutateStats()
+    } catch {
+      toast.error("Errore durante il salvataggio della fattura")
+    } finally {
+      setIsFatturaSubmitting(false)
     }
   }
 
@@ -233,7 +320,7 @@ export default function AdminPage() {
                 </Button>
               )}
               {activeTab === "fatture" && (
-                <Button onClick={() => toast.info("Creazione fattura - Coming soon")}>
+                <Button onClick={handleCreateFattura}>
                   <Plus className="mr-2 h-4 w-4" />
                   Nuova Fattura
                 </Button>
@@ -417,6 +504,15 @@ export default function AdminPage() {
         client={selectedClient}
         onSubmit={handleSubmitClient}
         isLoading={isSubmitting}
+      />
+
+      <FatturaForm
+        open={fatturaFormOpen}
+        onOpenChange={setFatturaFormOpen}
+        fattura={selectedFattura}
+        righe={selectedFatturaRighe}
+        onSubmit={handleSubmitFattura}
+        isLoading={isFatturaSubmitting}
       />
     </div>
   )
