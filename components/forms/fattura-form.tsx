@@ -115,8 +115,10 @@ export function FatturaForm({
 
   // Reset form when dialog opens/closes or fattura changes
   useEffect(() => {
+    console.log("[v0] FatturaForm useEffect triggered", { open, fattura: fattura?.id, existingRigheCount: existingRighe?.length })
     if (open) {
       if (fattura) {
+        console.log("[v0] Setting form data for fattura:", fattura.numero_fattura)
         setFormData({
           numero_fattura: fattura.numero_fattura,
           data_documento: fattura.data_documento.split("T")[0],
@@ -133,19 +135,24 @@ export function FatturaForm({
           note: fattura.note || "",
         })
         if (existingRighe && existingRighe.length > 0) {
+          console.log("[v0] Setting righe:", existingRighe.map(r => ({ id: r.id, desc: r.descrizione, qty: r.quantita, price: r.prezzo_unitario })))
           setRighe(
             existingRighe.map((r) => ({
               id: r.id,
               posizione: r.posizione,
               descrizione: r.descrizione,
-              quantita: r.quantita,
-              prezzo_unitario: r.prezzo_unitario,
+              quantita: Number(r.quantita),
+              prezzo_unitario: Number(r.prezzo_unitario),
               aliquota_iva_id: r.aliquota_iva_id,
-              percentuale_iva: r.percentuale_iva,
+              percentuale_iva: Number(r.percentuale_iva),
             }))
           )
+        } else {
+          console.log("[v0] No existing righe, keeping default")
+          setRighe([{ ...defaultRiga }])
         }
       } else {
+        console.log("[v0] No fattura, resetting to defaults")
         setFormData(defaultFormData)
         setRighe([{ ...defaultRiga }])
       }

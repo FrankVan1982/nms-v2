@@ -178,9 +178,13 @@ export default function AdminPage() {
       const response = await fetch(`/admin/api/fatture/${fattura.id}`)
       if (!response.ok) throw new Error("Failed to fetch fattura")
       const data = await response.json()
+      console.log("[v0] Loaded fattura data:", data)
+      console.log("[v0] Righe count:", data.righe?.length)
+      // Set both state values before opening the form to avoid timing issues
       setSelectedFattura(data.fattura)
       setSelectedFatturaRighe(data.righe || [])
-      setFatturaFormOpen(true)
+      // Use setTimeout to ensure state is updated before opening
+      setTimeout(() => setFatturaFormOpen(true), 0)
     } catch {
       toast.error("Errore nel caricamento della fattura")
     }
