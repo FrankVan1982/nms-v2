@@ -40,23 +40,25 @@ export async function PUT(
 
     const body: ClientInput = await request.json()
 
-    if (!body.company_name || !body.contact_name || !body.email) {
+    if (!body.ragione_sociale) {
       return NextResponse.json(
-        { error: "company_name, contact_name, and email are required" },
+        { error: "ragione_sociale is required" },
         { status: 400 }
       )
     }
 
     const client = await updateClient(clientId, {
-      company_name: body.company_name,
-      contact_name: body.contact_name,
-      email: body.email,
-      phone: body.phone || null,
-      address: body.address || null,
-      city: body.city || null,
-      country: body.country || null,
-      vat_number: body.vat_number || null,
-      notes: body.notes || null,
+      ragione_sociale: body.ragione_sociale,
+      codice_fiscale: body.codice_fiscale || null,
+      partita_iva: body.partita_iva || null,
+      email: body.email || null,
+      telefono: body.telefono || null,
+      pec: body.pec || null,
+      indirizzo: body.indirizzo || null,
+      citta: body.citta || null,
+      provincia: body.provincia || null,
+      cap: body.cap || null,
+      codice_univoco: body.codice_univoco || null,
     })
 
     if (!client) {
