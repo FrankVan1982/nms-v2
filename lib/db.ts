@@ -238,6 +238,55 @@ export async function deleteFattura(id: number): Promise<boolean> {
   return result.length > 0
 }
 
+export async function recalculateFatturaTotals(fatturaId: number): Promise<Fattura | null> {
+  // Get fattura to access sconto_percentuale and spese_incasso
+  const fatture = await sql`SELECT * FROM fatture WHERE id = ${fatturaId}`
+  if (!fatture[0]) return null
+  const fattura = fatture[0] as Fattura
+
+  // Get all righe for this fattura
+  const righe = await sql`SELECT * FROM righe_fattura WHERE fattura_id = ${fatturaId}`
+  
+  // Calculate totals from righe
+  let totaleMerce = 0
+  let totaleImposta = 0
+  
+  for (const riga of righe) {
+    const importoNetto = Number(riga.quantita) * Number(riga.prezzo_unitario)
+    const importoIva = importoNetto * (Number(riga.percentuale_iva) / 100)
+    totaleMerce += importoNetto
+    totaleImposta += importoIva
+  }
+  
+  // Apply discount
+  const scontoPercentuale = fattura.sconto_percentuale || 0
+  const scontoAmount = totaleMerce * (scontoPercentuale / 100)
+  const totaleImponibile = totaleMerce - scontoAmount
+  
+  // Recalculate IVA on discounted amount (proportionally)
+  const ivaDopoSconto = totaleMerce > 0 
+    ? totaleImposta * (totaleImponibile / totaleMerce)
+    : 0
+  
+  // Calculate final total
+  const speseIncasso = fattura.spese_incasso || 0
+  const totaleFattura = totaleImponibile + ivaDopoSconto + speseIncasso
+
+  // Update fattura with calculated totals
+  const result = await sql`
+    UPDATE fatture
+    SET
+      totale_merce = ${totaleMerce},
+      totale_imponibile = ${totaleImponibile},
+      totale_imposta = ${ivaDopoSconto},
+      totale_fattura = ${totaleFattura},
+      updated_at = NOW()
+    WHERE id = ${fatturaId}
+    RETURNING *
+  `
+  return (result[0] as Fattura) || null
+}
+
 // RIGHE FATTURA CRUD
 export async function getRigheFattura(fatturaId: number): Promise<RigaFattura[]> {
   const righe = await sql`SELECT * FROM righe_fattura WHERE fattura_id = ${fatturaId} ORDER BY posizione`
@@ -262,14 +311,27 @@ export async function addRigaFattura(data: RigaFatturaInput): Promise<RigaFattur
 }
 
 export async function updateRigaFattura(id: number, data: Partial<RigaFatturaInput>): Promise<RigaFattura | null> {
+  // Calculate the computed fields if we have enough data
+  const quantita = data.quantita ?? 0
+  const prezzo_unitario = data.prezzo_unitario ?? 0
+  const percentuale_iva = data.percentuale_iva ?? 22
+  
+  const importo_netto = quantita * prezzo_unitario
+  const importo_iva = importo_netto * (percentuale_iva / 100)
+  const importo_totale = importo_netto + importo_iva
+
   const result = await sql`
     UPDATE righe_fattura 
     SET 
+      posizione = COALESCE(${data.posizione}, posizione),
       descrizione = COALESCE(${data.descrizione}, descrizione),
       quantita = COALESCE(${data.quantita}, quantita),
       prezzo_unitario = COALESCE(${data.prezzo_unitario}, prezzo_unitario),
       aliquota_iva_id = ${data.aliquota_iva_id},
-      percentuale_iva = COALESCE(${data.percentuale_iva}, percentuale_iva)
+      percentuale_iva = COALESCE(${data.percentuale_iva}, percentuale_iva),
+      importo_netto = ${importo_netto},
+      importo_iva = ${importo_iva},
+      importo_totale = ${importo_totale}
     WHERE id = ${id}
     RETURNING *
   `

@@ -6,6 +6,7 @@ import type { Client, AliquotaIva, ModalitaPagamento, Fattura, RigaFattura } fro
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -115,10 +116,8 @@ export function FatturaForm({
 
   // Reset form when dialog opens/closes or fattura changes
   useEffect(() => {
-    console.log("[v0] FatturaForm useEffect triggered", { open, fattura: fattura?.id, existingRigheCount: existingRighe?.length })
     if (open) {
       if (fattura) {
-        console.log("[v0] Setting form data for fattura:", fattura.numero_fattura)
         setFormData({
           numero_fattura: fattura.numero_fattura,
           data_documento: fattura.data_documento.split("T")[0],
@@ -135,7 +134,6 @@ export function FatturaForm({
           note: fattura.note || "",
         })
         if (existingRighe && existingRighe.length > 0) {
-          console.log("[v0] Setting righe:", existingRighe.map(r => ({ id: r.id, desc: r.descrizione, qty: r.quantita, price: r.prezzo_unitario })))
           setRighe(
             existingRighe.map((r) => ({
               id: r.id,
@@ -148,11 +146,9 @@ export function FatturaForm({
             }))
           )
         } else {
-          console.log("[v0] No existing righe, keeping default")
           setRighe([{ ...defaultRiga }])
         }
       } else {
-        console.log("[v0] No fattura, resetting to defaults")
         setFormData(defaultFormData)
         setRighe([{ ...defaultRiga }])
       }
@@ -253,6 +249,11 @@ export function FatturaForm({
             <FileText className="h-5 w-5" />
             {fattura ? "Modifica Fattura" : "Nuova Fattura"}
           </DialogTitle>
+          <DialogDescription>
+            {fattura
+              ? "Modifica i dati della fattura e le righe associate."
+              : "Compila i campi per creare una nuova fattura."}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">

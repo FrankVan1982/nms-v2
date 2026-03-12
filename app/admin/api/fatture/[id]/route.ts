@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getFatturaConRighe, updateFattura, deleteFattura, addRigaFattura, deleteRigaFattura, getRigheFattura, type FatturaInput } from "@/lib/db"
+import { getFatturaConRighe, updateFattura, deleteFattura, addRigaFattura, updateRigaFattura, deleteRigaFattura, getRigheFattura, recalculateFatturaTotals, type FatturaInput } from "@/lib/db"
 
 export async function GET(
   request: Request,
@@ -76,9 +76,21 @@ export async function PUT(
         }
       }
 
-      // Add new righe (ones without id)
+      // Process all righe: update existing, add new
       for (const riga of righe) {
-        if (!riga.id) {
+        if (riga.id) {
+          // Update existing riga
+          await updateRigaFattura(riga.id, {
+            fattura_id: fatturaId,
+            posizione: riga.posizione,
+            descrizione: riga.descrizione,
+            quantita: riga.quantita,
+            prezzo_unitario: riga.prezzo_unitario,
+            aliquota_iva_id: riga.aliquota_iva_id,
+            percentuale_iva: riga.percentuale_iva,
+          })
+        } else {
+          // Add new riga
           await addRigaFattura({
             fattura_id: fatturaId,
             posizione: riga.posizione,
@@ -90,9 +102,14 @@ export async function PUT(
           })
         }
       }
+
+      // Recalculate totals after updating righe
+      await recalculateFatturaTotals(fatturaId)
     }
 
-    return NextResponse.json(fattura)
+    // Get updated fattura with recalculated totals
+    const updatedFattura = await getFatturaConRighe(fatturaId)
+    return NextResponse.json(updatedFattura?.fattura || fattura)
   } catch (error) {
     console.error("Error updating fattura:", error)
     return NextResponse.json({ error: "Failed to update fattura" }, { status: 500 })

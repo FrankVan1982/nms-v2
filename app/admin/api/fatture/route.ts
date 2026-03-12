@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getFatture, createFattura, addRigaFattura, type FatturaInput, type RigaFatturaInput } from "@/lib/db"
+import { getFatture, createFattura, addRigaFattura, recalculateFatturaTotals, type FatturaInput, type RigaFatturaInput } from "@/lib/db"
 
 export async function GET() {
   try {
@@ -65,6 +65,10 @@ export async function POST(request: Request) {
           percentuale_iva: riga.percentuale_iva,
         })
       }
+
+      // Recalculate totals after adding righe
+      const updatedFattura = await recalculateFatturaTotals(fattura.id)
+      return NextResponse.json(updatedFattura || fattura, { status: 201 })
     }
 
     return NextResponse.json(fattura, { status: 201 })
