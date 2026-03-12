@@ -76,6 +76,9 @@ const defaultRiga: RigaFormData = {
   percentuale_iva: 22,
 }
 
+// IBAN fisso aziendale - modifica qui il valore
+const IBAN_FISSO = "IT00X0000000000000000000000"
+
 const defaultFormData: FatturaFormData = {
   numero_fattura: "",
   data_documento: new Date().toISOString().split("T")[0],
@@ -84,7 +87,7 @@ const defaultFormData: FatturaFormData = {
   rif_bolla_data: "",
   modalita_pagamento_id: null,
   descrizione_pagamento: "",
-  iban: "",
+  iban: IBAN_FISSO,
   sconto_percentuale: 0,
   spese_incasso: 0,
   acconto: 0,
@@ -445,13 +448,14 @@ export function FatturaForm({
                       type="number"
                       step="0.01"
                       min="0"
-                      value={riga.quantita}
+                      value={riga.quantita || ""}
                       onChange={(e) =>
                         updateRiga(index, {
                           quantita: parseFloat(e.target.value) || 0,
                         })
                       }
                       className="text-right"
+                      placeholder="1"
                     />
                   </div>
 
@@ -462,13 +466,14 @@ export function FatturaForm({
                       type="number"
                       step="0.01"
                       min="0"
-                      value={riga.prezzo_unitario}
+                      value={riga.prezzo_unitario || ""}
                       onChange={(e) =>
                         updateRiga(index, {
                           prezzo_unitario: parseFloat(e.target.value) || 0,
                         })
                       }
                       className="text-right"
+                      placeholder="0.00"
                     />
                   </div>
 
@@ -555,32 +560,9 @@ export function FatturaForm({
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="descrizione_pagamento">
-                    Descrizione Pagamento
-                  </Label>
-                  <Input
-                    id="descrizione_pagamento"
-                    value={formData.descrizione_pagamento}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        descrizione_pagamento: e.target.value,
-                      }))
-                    }
-                    placeholder="es. Bonifico bancario 30gg"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="iban">IBAN</Label>
-                  <Input
-                    id="iban"
-                    value={formData.iban}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, iban: e.target.value }))
-                    }
-                    placeholder="IT00X0000000000000000000000"
-                  />
+                <div className="rounded-lg bg-muted/50 p-3 text-sm">
+                  <p className="text-muted-foreground">IBAN:</p>
+                  <p className="font-mono font-medium">{IBAN_FISSO}</p>
                 </div>
               </CardContent>
             </Card>
@@ -598,45 +580,48 @@ export function FatturaForm({
                     step="0.01"
                     min="0"
                     max="100"
-                    value={formData.sconto_percentuale}
+                    value={formData.sconto_percentuale || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
                         sconto_percentuale: parseFloat(e.target.value) || 0,
                       }))
                     }
+                    placeholder="0.00"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="spese_incasso">Spese Incasso</Label>
+                  <Label htmlFor="spese_incasso">Spese Incasso (EUR)</Label>
                   <Input
                     id="spese_incasso"
                     type="number"
                     step="0.01"
                     min="0"
-                    value={formData.spese_incasso}
+                    value={formData.spese_incasso || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
                         spese_incasso: parseFloat(e.target.value) || 0,
                       }))
                     }
+                    placeholder="0.00"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="acconto">Acconto</Label>
+                  <Label htmlFor="acconto">Acconto (EUR)</Label>
                   <Input
                     id="acconto"
                     type="number"
                     step="0.01"
                     min="0"
-                    value={formData.acconto}
+                    value={formData.acconto || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
                         acconto: parseFloat(e.target.value) || 0,
                       }))
                     }
+                    placeholder="0.00"
                   />
                 </div>
               </CardContent>
